@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /*	
  * 	File:				Deck.java
  * 	Associated Files:	Main.java, OldMaid.java
@@ -12,4 +14,21 @@
 
 public class OldMaid {
 	
+	int numPlayers;
+	Deck deck;
+	
+	public OldMaid(int numPlayers) {
+		this.numPlayers = numPlayers;
+		deck = new Deck();
+	}
+	
+	
+	public int PlayGame(int numPlayers) {
+		
+		ArrayList<ArrayList<String>> allHands = deck.DealCards(numPlayers);
+		
+		
+		int playerWon = -1;
+		return playerWon;
+	}
 }

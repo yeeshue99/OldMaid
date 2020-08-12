@@ -85,8 +85,24 @@ public class Deck {
 	 * 	Returns:				New hand with all pairs removed
 	 */
 	public ArrayList<String> RemovePairs(ArrayList<String> hand) {
-		
-		
+		Collections.sort(hand);
+		int i = 0;
+	    while(i < hand.size() - 1){
+	      //	Check each sequence of two cards
+	      if(hand.get(i).equals(hand.get(i+1))){
+	        //	Remove card at index i twice - effectively removes i and i+1
+	        hand.remove(i);
+	        hand.remove(i);
+
+	        //	Move i back by one, so we keep our position in the list consistent,
+	        //		since we just removed two elements,
+	        //		then make sure i stays positive.
+	        i = Math.max(0, (i - 1));
+	      }
+	      else{
+	        i++;
+	      }
+	    }
 		return hand;
 		
 	}
