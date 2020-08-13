@@ -10,8 +10,7 @@
  */
 
 import java.util.Scanner;
-import java.util.Arrays;
-import java.util.Random;
+//import java.util.Random;
 
 /*
  * Class:				Main
@@ -27,11 +26,11 @@ public class Main {
 	 * Returns: 			
 	 */
 	public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Welcome to Old Maid! How many players will you have? ");
-        int numPlayers = scanner.nextInt();
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Welcome to Old Maid! Enter number of players: ");
+        int numPlayers = sc.nextInt();
         OldMaid oldMaidGame = new OldMaid(numPlayers);
-        int winner = oldMaidGame.PlayGame() + 1;
+        int winner = oldMaidGame.PlayGame(sc) + 1;
         System.out.println("Sorry, player #" + (winner + 1) + ", you lost!");
     }
 }

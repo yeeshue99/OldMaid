@@ -24,18 +24,15 @@ public class Deck {
 	// Different combinations for cards
 	String[] suits = { "Clubs", "Hearts", "Spades", "Diamonds" };
 	String[] values = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A" };
-	HashMap<String, Integer> letterValues = new HashMap<String, Integer>(){
-		{
-		put("J", 11);
-		put("Q", 12);
-		put("K", 13);
-		put("A", 1);
-		}
-	};
+	HashMap<String, Integer> letterValues = new HashMap<String, Integer>();
 
 
 	public Deck() {
 		MakeDeck();
+		letterValues.put("J", 11);
+		letterValues.put("Q", 12);
+		letterValues.put("K", 13);
+		letterValues.put("A", 1);
 	}
 
 	// Container to hold all cards
@@ -99,7 +96,7 @@ public class Deck {
 	 * Purpose:				Removes every pair of cards from the hand
 	 * Returns: 			New hand with all pairs removed
 	 */
-	public ArrayList<String> RemovePairs(ArrayList<String> hand) {
+	public Boolean RemovePairs(ArrayList<String> hand) {
 		Collections.sort(hand, dblDigitSort);
 		int i = 0;
 		while (i < hand.size() - 1) {
@@ -118,24 +115,35 @@ public class Deck {
 			}
 		}
 		Collections.shuffle(hand);
-		return hand;
-
+		if(hand.size() > 0) {
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 
 	/*
 	 * Function:			DisplayCards
-	 * Params: 				player's hand(ArrayList<String>)
+	 * Params: 				A certain player's hand(ArrayList<String>)
 	 * Purpose:				Prints out a hand to the console to be viewed
 	 * Returns: 			
 	 */
 	public void DisplayCards(ArrayList<String> hand) {
+		Collections.sort(hand, dblDigitSort);
 		for (int i = 0; i < hand.size(); i++) {
 			System.out.print(hand.get(i) + ", ");
 		}
 		System.out.println();
 	}
 	
-	Comparator<String> dblDigitSort = new Comparator<String>()
+	/*
+	 * Function:			dblDigitSort
+	 * Params: 				
+	 * Purpose:				Sorts based off of Card values: A is low, K is high.
+	 * Returns: 			Comparator of two values
+	 */
+	private Comparator<String> dblDigitSort = new Comparator<String>()
     {
         @Override
         public int compare(String s1, String s2)
@@ -160,12 +168,18 @@ public class Deck {
         }
     };
     
-	public static boolean isNumeric(String strNum) {
+	/*
+	 * Function:			isNumeric
+	 * Params: 				Card Value(String)
+	 * Purpose:				Determines whether or not a string is wholly a number
+	 * Returns: 			Whether or not the given string can be parsed as a number
+	 */
+	private static boolean isNumeric(String strNum) {
 	    if (strNum == null) {
 	        return false;
 	    }
 	    try {
-	        Integer i = Integer.parseInt(strNum);
+	        Integer __ = Integer.parseInt(strNum);
 	    } catch (NumberFormatException nfe) {
 	        return false;
 	    }
