@@ -32,6 +32,6 @@ public class Main {
         int numPlayers = scanner.nextInt();
         OldMaid oldMaidGame = new OldMaid(numPlayers);
         int winner = oldMaidGame.PlayGame() + 1;
-        System.out.println("Sorry, player #" + winner + 1 + ", you lost!");
+        System.out.println("Sorry, player #" + (winner + 1) + ", you lost!");
     }
 }

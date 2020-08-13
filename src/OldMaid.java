@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Scanner;
 
 /*	
@@ -19,36 +19,45 @@ public class OldMaid {
 	int numPlayers;
 	Deck deck;
 	ArrayList<ArrayList<String>> allHands;
-	Hashtable<Integer, Integer> numCards;
+	HashMap<Integer, Integer> numCards;
 	Scanner sc = new Scanner(System.in);
 	
 	public OldMaid(int numPlayers) {
 		this.numPlayers = numPlayers;
 		deck = new Deck();
 		allHands = deck.DealCards(numPlayers);
-		numCards = new Hashtable<Integer, Integer>();
+		numCards = new HashMap<Integer, Integer>();
 		for(int i = 0; i < numPlayers; i++) {
 			numCards.put(i, allHands.get(i).size());
+            deck.RemovePairs(allHands.get(i));
 		}
 	}
 	
 	
 	public int PlayGame() {
 		System.out.println("Welcome to the game of Old Maid!");
+
 		
 		int chosenCard = -1;
 		int player = 0;
 		int nextPlayer = 1;
 		while(StillPlaying() == -1) {
-			chosenCard = GetPlayerChoice(player);
+			System.out.println("======================================");
+            System.out.println("Player #" + (player + 1));
+            deck.DisplayCards(allHands.get(player));
+            System.out.println("Player # " + (nextPlayer + 1));
+            deck.DisplayCards(allHands.get(nextPlayer));
+
+            System.out.println("Next: " + nextPlayer);
+			chosenCard = GetPlayerChoice(player, nextPlayer);
 			allHands.get(player).add(allHands.get(nextPlayer).get(chosenCard));
 			allHands.get(nextPlayer).remove(chosenCard);
 			deck.RemovePairs(allHands.get(player));
 			player = nextPlayer;
-			if (++nextPlayer >= numPlayers) {
+            nextPlayer++;
+			if (nextPlayer >= numPlayers) {
 				nextPlayer = 0;
 			}
-
 		}
 		int playerLost = StillPlaying();	
 		return playerLost;
@@ -86,17 +95,16 @@ public class OldMaid {
 	 * Purpose:				Validate user input
 	 * Returns: 			Index of the chosen card
 	 */
-	private int GetPlayerChoice(int player) {
-		System.out.println(player);
-		System.out.println("Okay, player #" + player + 1 +", Player #" + player + 2 + " has " + allHands.get(player + 1).size() + " cards.");
+	private int GetPlayerChoice(int player, int nextPlayer) {
+		System.out.println("Okay, player #" + (player + 1) +", Player #" + (nextPlayer + 1) + " has " + allHands.get(nextPlayer).size() + " cards.");
 		System.out.println("Which card will you take? ");
 		int chosenCard = sc.nextInt();
 		
-		while(!(chosenCard >= 1 && chosenCard <= allHands.get(player).size())) {
+		while(!(chosenCard >= 1 && chosenCard <= allHands.get(player).size() + 1)) {
 			System.out.println("Invalid card number. Please enter integer between 1 and " + allHands.get(player).size() + ": ");
 			chosenCard = sc.nextInt();
 		}
-		return chosenCard;
+		return chosenCard - 1;
 	}
 
 

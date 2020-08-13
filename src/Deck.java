@@ -1,7 +1,7 @@
 /*	
  * 	File:				Deck.java
  * 	Associated Files:	Main.java, OldMaid.java
- * 	Packages Needed:	java.util.ArrayList, java.util.Collections
+ * 	Packages Needed:	java.util.ArrayList, java.util.Collections, java.util.Comparator;
  * 	Author:            	Michael Ngo (https://github.com/yeeshue99)
  * 	Date Modified:      8/12/2020 by Michael Ngo
  * 	Modified By:        Michael Ngo
@@ -11,6 +11,8 @@
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 
 /*
  * Class:				Deck
@@ -22,6 +24,15 @@ public class Deck {
 	// Different combinations for cards
 	String[] suits = { "Clubs", "Hearts", "Spades", "Diamonds" };
 	String[] values = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A" };
+	HashMap<String, Integer> letterValues = new HashMap<String, Integer>(){
+		{
+		put("J", 11);
+		put("Q", 12);
+		put("K", 13);
+		put("A", 1);
+		}
+	};
+
 
 	public Deck() {
 		MakeDeck();
@@ -74,10 +85,11 @@ public class Deck {
 			}
 
 		}
-
+		/*
 		for (int i = 0; i < numPlayers; i++) {
-			Collections.sort(hands.get(i));
+			Collections.sort(hands.get(i), dblDigitSort);
 		}
+		*/
 		return hands;
 	}
 
@@ -88,23 +100,24 @@ public class Deck {
 	 * Returns: 			New hand with all pairs removed
 	 */
 	public ArrayList<String> RemovePairs(ArrayList<String> hand) {
-		Collections.sort(hand);
+		Collections.sort(hand, dblDigitSort);
 		int i = 0;
 		while (i < hand.size() - 1) {
-			// Check each sequence of two cards
-			if (hand.get(i).equals(hand.get(i + 1))) {
-				// Remove card at index i twice - effectively removes i and i+1
+			if (hand.get(i).charAt(0) == (hand.get(i + 1).charAt(0)) && hand.get(i).charAt(1) == (hand.get(i + 1).charAt(1))) {
 				hand.remove(i);
 				hand.remove(i);
-
-				// Move i back by one, so we keep our position in the list consistent,
-				// since we just removed two elements,
-				// then make sure i stays positive.
 				i = Math.max(0, (i - 1));
-			} else {
+			}
+			else if (hand.get(i).charAt(0) == (hand.get(i + 1).charAt(0))) {
+				hand.remove(i);
+				hand.remove(i);
+				i = Math.max(0, (i - 1));
+			} 
+			else {
 				i++;
 			}
 		}
+		Collections.shuffle(hand);
 		return hand;
 
 	}
@@ -120,5 +133,42 @@ public class Deck {
 			System.out.print(hand.get(i) + ", ");
 		}
 		System.out.println();
+	}
+	
+	Comparator<String> dblDigitSort = new Comparator<String>()
+    {
+        @Override
+        public int compare(String s1, String s2)
+        {
+        	String[] str1 = s1.split(" ");
+        	String[] str2 = s2.split(" ");
+        	Integer val1;
+        	Integer val2;
+        	if(isNumeric(str1[0])) {
+                val1 = Integer.parseInt(str1[0]);
+        	}
+        	else {
+        		val1 = letterValues.get(str1[0]);
+        	}
+        	if(isNumeric(str2[0])) {
+                val2 = Integer.parseInt(str2[0]);
+        	}
+        	else {
+        		val2 = letterValues.get(str2[0]);
+        	}
+            return val1.compareTo(val2);
+        }
+    };
+    
+	public static boolean isNumeric(String strNum) {
+	    if (strNum == null) {
+	        return false;
+	    }
+	    try {
+	        Integer i = Integer.parseInt(strNum);
+	    } catch (NumberFormatException nfe) {
+	        return false;
+	    }
+	    return true;
 	}
 }
