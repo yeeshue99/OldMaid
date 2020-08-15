@@ -17,7 +17,8 @@ import java.util.HashMap;
 /*
  * Class:				Deck
  * Purpose:				Handle all card operations
- * Methods:				MakeDeck, DealCards
+ * Methods:				MakeDeck, DealCards, RemovePairs, DisplayCards,
+ * 							dblDigitSort, isNumeric
  */
 public class Deck {
 
@@ -25,7 +26,6 @@ public class Deck {
 	String[] suits = { "Clubs", "Hearts", "Spades", "Diamonds" };
 	String[] values = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A" };
 	HashMap<String, Integer> letterValues = new HashMap<String, Integer>();
-
 
 	public Deck() {
 		MakeDeck();
@@ -101,11 +101,13 @@ public class Deck {
 		int i = 0;
 		while (i < hand.size() - 1) {
 			if (hand.get(i).charAt(0) == (hand.get(i + 1).charAt(0)) && hand.get(i).charAt(1) == (hand.get(i + 1).charAt(1))) {
+				System.out.println("You had a pair of " + hand.get(i).charAt(0) + hand.get(i).charAt(1) + "\'s!");
 				hand.remove(i);
 				hand.remove(i);
 				i = Math.max(0, (i - 1));
 			}
 			else if (hand.get(i).charAt(0) == (hand.get(i + 1).charAt(0))) {
+				System.out.println("You had a pair of " + hand.get(i).charAt(0) + "\'s!");
 				hand.remove(i);
 				hand.remove(i);
 				i = Math.max(0, (i - 1));
