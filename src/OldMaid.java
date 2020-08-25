@@ -1,9 +1,9 @@
 /*	
  * 	File:				OldMaid.java
- * 	Associated Files:	Main.java, Deck.java
+ * 	Associated Files:	Main.java, Deck.java, Card.java
  * 	Packages Needed:	java.util.ArrayList, java.util.HashMap, java.util.Scanner
  * 	Author:            	Michael Ngo (https://github.com/yeeshue99)
- * 	Date Modified:      8/12/2020 by Michael Ngo
+ * 	Date Modified:      8/20/2020 by Michael Ngo
  * 	Modified By:        Michael Ngo
  * 
  * 	Purpose:			Underlying structure for Old Maid card game
@@ -16,14 +16,13 @@ import java.util.Scanner;
 /*
  * Class:				OldMaid
  * Purpose:				Handles Old Maid engine and game
- * Methods:				PlayGame, NextPlayer, NextPlayerChoice
+ * Methods:				PlayGame, NextPlayer, GetPlayerChoice
  */
 public class OldMaid {
 	
 	
 	int numPlayers;
-	Deck deck;
-	ArrayList<ArrayList<String>> allHands;
+	ArrayList<ArrayList<Card>> allHands;
 	HashMap<Integer, Boolean> playersDone;
 	Scanner sc;
 	
@@ -35,13 +34,16 @@ public class OldMaid {
 	 */
 	public OldMaid(int numPlayers) {
 		this.numPlayers = numPlayers;
-		deck = new Deck();
+		
 		System.out.println("Dealing the deck evenly to every player...");
-		allHands = deck.DealCards(numPlayers);
+		allHands = Deck.DealCards(numPlayers);
+		
+		//Looks for pairs in hands, and while doing that fills playersDone with whether or not
+		//	the player is out
 		playersDone = new HashMap<Integer, Boolean>();
 		for(int i = 0; i < numPlayers; i++) {
 			System.out.printf("Okay, Player #%d, let's see if you had any pairs...%n", (i + 1));
-            deck.RemovePairs(allHands.get(i));
+            Deck.RemovePairs(allHands.get(i));
             playersDone.put(i, false);
 		}
 	}
@@ -60,27 +62,31 @@ public class OldMaid {
 		int player = 0;
 		int nextPlayer = 1;
 		while(true) {
+			//Player's cards
 			System.out.println("======================================");
             System.out.printf("Player #%d, these are your cards:%n", (player + 1));
-            deck.DisplayCards(allHands.get(player));
+            Deck.DisplayCards(allHands.get(player));
 
+            //Next player's cards area
 			chosenCard = GetPlayerChoice(player, nextPlayer);
-			System.out.println("You got the " + allHands.get(nextPlayer).get(chosenCard));
-			allHands.get(player).add(allHands.get(nextPlayer).get(chosenCard));
-			allHands.get(nextPlayer).remove(chosenCard);
+			System.out.println("You got the " + allHands.get(nextPlayer).get(chosenCard).GetLabel());
+			allHands.get(player).add(allHands.get(nextPlayer).remove(chosenCard));
 
+			//Check for new pairs
 			System.out.printf("Okay, Player #%d, let's see if you had any pairs...%n", (player + 1));
-			playersDone.put(nextPlayer, deck.RemovePairs(allHands.get(nextPlayer)));
-			playersDone.put(player, deck.RemovePairs(allHands.get(player)));
+			playersDone.put(nextPlayer, Deck.RemovePairs(allHands.get(nextPlayer)));
+			playersDone.put(player, Deck.RemovePairs(allHands.get(player)));
 			
 			player = NextPlayer(player);
             
             nextPlayer = NextPlayer(player);
 
+            //If the only players left in the game are the same person, that means everyone else is out
             if(player == nextPlayer) {
             	break;
             }
 		}
+		//Now we have the index of the player whos is left, which is the loser
 		int playerLost = player;
 		return playerLost;
 	}
@@ -118,15 +124,12 @@ public class OldMaid {
 		int chosenCard = -1;
 
 		chosenCard = sc.nextInt();
-		//sc.nextLine();
 		
+		//Input validation section
 		while(!(chosenCard >= 1 && chosenCard <= allHands.get(nextPlayer).size())) {
 			System.out.println("Invalid card number. Please enter integer between 1 and " + allHands.get(nextPlayer).size() + ": ");
 			chosenCard = sc.nextInt();
 		}
 		return chosenCard - 1;
 	}
-
-
-
 }

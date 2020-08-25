@@ -1,9 +1,9 @@
 /*	
  * 	File:				Main.java
- * 	Associated Files:	Deck.java, OldMaid.java
+ * 	Associated Files:	Deck.java, OldMaid.java, Card.java
  * 	Packages Needed:	
  * 	Author:            	Michael Ngo (https://github.com/yeeshue99)
- * 	Date Modified:      8/12/2020 by Michael Ngo
+ * 	Date Modified:      8/20/2020 by Michael Ngo
  * 	Modified By:        Michael Ngo
  * 
  * 	Purpose:			Run a simple Old Maid game in console
@@ -29,8 +29,11 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         System.out.print("Welcome to Old Maid! Enter number of players: ");
         int numPlayers = sc.nextInt();
+        
         OldMaid oldMaidGame = new OldMaid(numPlayers);
-        int winner = oldMaidGame.PlayGame(sc) + 1;
-        System.out.println("Sorry, player #" + (winner + 1) + ", you lost!");
+        
+        //Loser is the player id in terms of computer array notation
+        int loser = oldMaidGame.PlayGame(sc) + 1;
+        System.out.println("Sorry, player #" + (loser + 1) + ", you lost!");
     }
 }
